@@ -26,7 +26,8 @@ License: MIT (see LICENSE file).
 #include <algorithm>;
 #include <any>;
 
-#include "zlib.h";
+// Include dependencies. 
+#include "depends.h";
 
 // The ODS Namespace
 namespace ODS {
@@ -242,7 +243,19 @@ namespace ODS {
 			stream.close();
 		}
 		else if (compressionType == CompressionType::ZLIB) {
-			// TODO
+			uLong cmp_len = compressBound(bytes.size());
+			mz_uint8* pCmp;
+			pCmp = (mz_uint8*)malloc((size_t)cmp_len);
+			int cmp_status = compress(pCmp, &cmp_len, (const unsigned char*)getArray(), length());
+			if (cmp_status != Z_OK)
+			{
+				free(pCmp);
+				throw ODSException("Compression Failed");
+				return;
+			}
+			std::ofstream stream(name, std::ios::out | std::ios::binary | std::ios::ate);
+			stream.write((const char*) pCmp, cmp_len);
+			free(pCmp);
 		}
 	}
 
@@ -272,7 +285,7 @@ namespace ODS {
 	public:
 		BinaryInputStream(std::string file_name, CompressionType type = CompressionType::NONE);
 		BinaryInputStream(byte data[], CompressionType type = CompressionType::NONE);
-		BinaryInputStream(byte* data, CompressionType type = CompressionType::NONE);
+		//BinaryInputStream(byte* data, CompressionType type = CompressionType::NONE);
 		~BinaryInputStream();
 
 		byte readByte();
@@ -322,7 +335,7 @@ namespace ODS {
 		}
 	}
 
-	inline BinaryInputStream::BinaryInputStream(byte data[], CompressionType type = CompressionType::NONE)
+	inline BinaryInputStream::BinaryInputStream(byte data[], CompressionType type)
 	{
 		// TODO DECOMPRESS DATA
 		name = "";
@@ -331,14 +344,14 @@ namespace ODS {
 		this->bytes = data;
 	}
 
-	inline BinaryInputStream::BinaryInputStream(byte* data, CompressionType type)
+	/*inline BinaryInputStream::BinaryInputStream(byte* data, CompressionType type)
 	{
 		// TODO DECOMPRESS DATA
 		name = "";
 		compressionType = type;
 		currentIndex = 0;
 		this->bytes = data;
-	}
+	}*/
 
 	inline BinaryInputStream::~BinaryInputStream()
 	{

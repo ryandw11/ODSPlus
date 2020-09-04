@@ -39,7 +39,7 @@ int main(void) {
 	bis.close();
 	*/
 
-	ODS::ObjectDataStructure ods = ODS::ObjectDataStructure("example.ods", CompressionType::NONE);
+	ODS::ObjectDataStructure ods = ODS::ObjectDataStructure("example.ods", CompressionType::ZLIB);
 	ByteTag bt = ByteTag("yeet", 44);
 	std::vector<ITag*> tags = std::vector< ITag*>();
 	tags.push_back(new ByteTag("yeet", 44));

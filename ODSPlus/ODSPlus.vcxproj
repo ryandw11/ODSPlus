@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="depends.h" />
     <ClInclude Include="ods.h" />
     <ClInclude Include="zconf.h" />
     <ClInclude Include="zlib.h" />
